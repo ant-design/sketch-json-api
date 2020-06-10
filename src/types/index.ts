@@ -5,5 +5,7 @@ export * from "./meta";
 export * from "./document";
 export * from "./page";
 
+export type JSONPackComponent = "user" | "meta" | "document" | "pages";
+
 import * as SketchType from ".";
 export default SketchType;

@@ -1,5 +1,6 @@
-import { unzipSketch } from "../../src";
+import { SketchFile } from "../../src";
 
 const sampleSketchPath = "demo/unzip/minisample.sketch";
 
-unzipSketch(sampleSketchPath, "temp/unzip");
+const sketch = new SketchFile(sampleSketchPath);
+sketch.unzip("temp/unzip");

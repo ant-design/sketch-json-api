@@ -9,7 +9,7 @@
     "demo2": "node demos/merge-sketch/scripts/merge.js",
     "demo3": "node demos/new-json-sketch/scripts/new.js",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -29,7 +29,10 @@
     "uuid": "^8.1.0"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.0",
     "@types/node": "^14.0.12",
+    "jest": "^26.0.1",
+    "ts-jest": "^26.1.0",
     "typescript": "^3.9.5"
   }
 }

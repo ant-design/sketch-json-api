@@ -1,32 +1,43 @@
-import SketchType from "../../types";
-import CONSTANTS from "../../constants";
+import * as fs from "fs";
 
-export interface UserJSONOptions {
+import SketchType from "../types";
+import { CONSTANTS } from "../constants";
+
+export interface UserConstructorOptions {
   document?: SketchType.UserJSON_Document;
   pageConfigs?: SketchType.UserJSON_PageConfig[];
 }
 
 type KeyOfPageConfig = keyof SketchType.UserJSON_PageConfig;
 
-export class UserJSON {
+export class User {
   document: SketchType.UserJSON_Document;
   pageConfigs?: SketchType.UserJSON_PageConfig[];
-  constructor(options?: UserJSONOptions) {
-    this.document = {
+
+  constructor();
+  constructor(options: UserConstructorOptions);
+  constructor(options?: any) {
+    this.document = (options && options.document) || {
       pageListCollapsed: CONSTANTS.user.document.pageListCollapsed.default,
       pageListHeight: CONSTANTS.user.document.pageListHeight.default,
     };
 
-    if (options) {
-      const { document, pageConfigs } = options;
+    if (options && options.pageConfigs) {
+      this.pageConfigs = options.pageConfigs;
+    }
+  }
 
-      if (document) {
-        this.document = { ...this.document, ...document };
-      }
+  static fromData(data: UserConstructorOptions) {
+    return new this(data);
+  }
 
-      if (pageConfigs) {
-        this.pageConfigs = pageConfigs;
-      }
+  static fromPath(path: string): User {
+    const file = fs.readFileSync(path, "utf-8");
+    if (file) {
+      const meta = new this(JSON.parse(file));
+      return meta;
+    } else {
+      throw Error("Invalid data from path.");
     }
   }
 

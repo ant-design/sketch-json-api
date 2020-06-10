@@ -1,3 +1,5 @@
-import { newJSONPack } from "../../src";
+import { JSONPack } from "../../src";
 
-newJSONPack("temp/new");
+const pack = new JSONPack();
+
+pack.write("temp/new");

@@ -11,4 +11,4 @@ export const CONSTANTS = {
   },
 };
 
-export default CONSTANTS;
+export { INIT_DATA } from "./init";
