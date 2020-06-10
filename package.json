@@ -1,0 +1,35 @@
+{
+  "name": "sketch-json-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "demo1-unzip": "node demos/archive-and-unarchive/scripts/unzip.js",
+    "demo1-zip": "node demos/archive-and-unarchive/scripts/zip.js",
+    "demo2": "node demos/merge-sketch/scripts/merge.js",
+    "demo3": "node demos/new-json-sketch/scripts/new.js",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ant-design/sketch-json-api.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ant-design/sketch-json-api/issues"
+  },
+  "homepage": "https://github.com/ant-design/sketch-json-api#readme",
+  "dependencies": {
+    "@sketch-hq/sketch-file-format": "^3.6.0",
+    "@sketch-hq/sketch-file-format-ts": "^5.1.0",
+    "@types/json-schema": "^7.0.4",
+    "mkdirp": "^1.0.4",
+    "uuid": "^8.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.0.12",
+    "typescript": "^3.9.5"
+  }
+}
