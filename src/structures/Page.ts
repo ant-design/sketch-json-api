@@ -41,6 +41,17 @@ export class Page {
     }
   }
 
+  symbolMasters(): SketchType.SymbolMaster[] {
+    const allSymbolMasters: SketchType.SymbolMaster[] = [];
+    const layers = this.data.layers;
+    layers.forEach((layer) => {
+      if (layer._class === "symbolMaster") {
+        allSymbolMasters.push(layer);
+      }
+    });
+    return allSymbolMasters;
+  }
+
   toSketchJSON() {
     return this.data;
   }

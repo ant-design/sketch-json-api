@@ -1,12 +1,12 @@
 import { SketchFile, JSONPack } from "../../src";
 
-const sampleSketchPath = "demo/label/SimpleButton.sketch";
+const sampleSketchPath = "demo/files/SimpleButton.sketch";
 
 const originSketch = new SketchFile(sampleSketchPath);
 
 const targetPath = "temp/label/files";
 
-originSketch.unzip(targetPath);
+originSketch.unzipSync(targetPath);
 
 if (JSONPack.isValidStructure(targetPath)) {
   console.log("yes");
