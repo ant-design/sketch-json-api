@@ -77,6 +77,10 @@ export class JSONPack {
     });
   }
 
+  getPages() {
+    return this.pages;
+  }
+
   setPath(path: string) {
     this.path = path;
   }
