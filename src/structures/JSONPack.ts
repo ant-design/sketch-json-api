@@ -86,6 +86,8 @@ export class JSONPack {
   }
 
   write(packPath: string) {
+    this.path = packPath;
+
     writeFileSyncP(
       path.join(packPath, "user.json"),
       JSON.stringify(this.user.toSketchJSON())

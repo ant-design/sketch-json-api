@@ -1,15 +1,21 @@
 import * as fs from "fs";
+import { v4 } from "uuid";
 
 import SketchType from "../types";
 import { INIT_DATA } from "../constants";
+
+export type PageConstrOpts = {
+  pageId?: SketchType.PageId;
+  data?: SketchType.PageJSON;
+};
 
 export class Page {
   pageId: SketchType.PageId;
   data: SketchType.PageJSON;
 
-  constructor() {
-    this.pageId = "A869BA2A-E632-4C2D-924E-7883848BB266";
-    this.data = INIT_DATA.page;
+  constructor(options?: PageConstrOpts) {
+    this.pageId = (options && options.pageId) || v4().toUpperCase();
+    this.data = (options && options.data) || INIT_DATA.page; //@todo
   }
 
   addSymbolMaster(symbolMaster: SketchType.SymbolMaster) {
@@ -33,8 +39,10 @@ export class Page {
   static fromPath(path: string): Page {
     const file = fs.readFileSync(path, "utf-8");
     if (file) {
-      const page = new this();
-      page.setData(JSON.parse(file));
+      const data: SketchType.PageJSON = JSON.parse(file);
+      const id = data.do_objectID;
+
+      const page = new this({ pageId: id, data });
       return page;
     } else {
       throw Error("Invalid data from path.");

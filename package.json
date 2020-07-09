@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "demo-techui": "npm run build && rm -rf temp/techui && node dist/demo/label/techui/techui.js",
     "demo1-unzip": "node demos/archive-and-unarchive/scripts/unzip.js",
     "demo1-zip": "node demos/archive-and-unarchive/scripts/zip.js",
     "demo2": "node demos/merge-sketch/scripts/merge.js",
@@ -25,6 +26,7 @@
     "@sketch-hq/sketch-file-format": "^3.6.0",
     "@sketch-hq/sketch-file-format-ts": "^5.1.0",
     "@types/json-schema": "^7.0.4",
+    "@types/uuid": "^8.0.0",
     "mkdirp": "^1.0.4",
     "uuid": "^8.1.0"
   },
