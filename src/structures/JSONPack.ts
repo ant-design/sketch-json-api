@@ -56,7 +56,7 @@ export class JSONPack {
     this.path = (options && options.path) || null;
   }
 
-  static fromPath(packPath: string): JSONPack {
+  static fromPathSync(packPath: string): JSONPack {
     if (!JSONPack.isValidStructure(packPath)) {
       throw Error("Invalid structure of path.");
     }
@@ -74,6 +74,33 @@ export class JSONPack {
       document,
       pages,
       path: packPath,
+    });
+  }
+
+  static fromPath(packPath: string): Promise<JSONPack> {
+    return new Promise((resolve, reject) => {
+      if (!JSONPack.isValidStructure(packPath)) {
+        reject("Invalid structure of path.");
+      }
+
+      const user = User.fromPath(path.join(packPath, "user.json"));
+      const meta = Meta.fromPath(path.join(packPath, "meta.json"));
+      const document = Document.fromPath(path.join(packPath, "document.json"));
+      const pages = fs
+        .readdirSync(path.join(packPath, "pages"))
+        .map((pagePath) =>
+          Page.fromPath(path.join(packPath, "pages", pagePath))
+        );
+
+      const pack = new this({
+        user,
+        meta,
+        document,
+        pages,
+        path: packPath,
+      });
+
+      resolve(pack);
     });
   }
 
