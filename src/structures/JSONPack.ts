@@ -7,7 +7,7 @@ import { Meta } from "./Meta";
 import { Document } from "./Document";
 import { Page } from "./Page";
 import { writeFileSyncP } from "../utils";
-import { JSONPackComponent } from "../types";
+import SketchType, { JSONPackComponent } from "../types";
 
 const STRUCTURE: Record<
   JSONPackComponent,
@@ -174,5 +174,15 @@ export class JSONPack {
         }
       }
     );
+  }
+
+  getAllArtboards(): SketchType.ArtboardLike[] {
+    const allArtboards: SketchType.ArtboardLike[] = [];
+    this.pages.forEach((page) => {
+      page.artboards().forEach((artboard) => {
+        allArtboards.push(artboard);
+      });
+    });
+    return allArtboards;
   }
 }

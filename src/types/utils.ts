@@ -9,5 +9,3 @@ export interface CoordString {
 export type Uuid = string;
 
 export type PageId = Uuid;
-
-export type SymbolMaster = FileFormat.SymbolMaster;

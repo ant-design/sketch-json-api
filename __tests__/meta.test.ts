@@ -35,5 +35,5 @@ test("meta from data", () => {
 });
 
 test("meta from path", () => {
-  Meta.fromPath("demo/zip/miniSamplePack/meta.json");
+  Meta.fromPath("demo/files/miniSamplePack/meta.json");
 });
