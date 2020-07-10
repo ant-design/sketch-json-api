@@ -5,10 +5,8 @@
   "main": "dist/src/index.js",
   "scripts": {
     "demo-techui": "npm run build && rm -rf temp/techui && node dist/demo/label/techui/techui.js",
-    "demo1-unzip": "node demos/archive-and-unarchive/scripts/unzip.js",
-    "demo1-zip": "node demos/archive-and-unarchive/scripts/zip.js",
-    "demo2": "node demos/merge-sketch/scripts/merge.js",
-    "demo3": "node demos/new-json-sketch/scripts/new.js",
+    "demo-zip": "npm run build && rm -rf temp/zip && node dist/demo/zip/zip.js",
+    "demo-unzip": "npm run build && rm -rf temp/unzip &&node dist/demo/unzip/unzip.js",
     "build": "tsc",
     "test": "jest"
   },

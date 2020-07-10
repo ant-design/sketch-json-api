@@ -62,7 +62,7 @@ originSketch
     if (unzipped) {
       let jsonPack;
       if (JSONPack.isValidStructure(targetPath)) {
-        jsonPack = JSONPack.fromPath(targetPath);
+        jsonPack = JSONPack.fromPathSync(targetPath);
 
         const pages: Page[] = jsonPack.getPages();
 
