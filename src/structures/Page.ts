@@ -49,6 +49,17 @@ export class Page {
     }
   }
 
+  artboards(): SketchType.ArtboardLike[] {
+    const allArtboards: SketchType.ArtboardLike[] = [];
+    const layers = this.data.layers;
+    layers.forEach((layer) => {
+      if (layer._class === "artboard" || layer._class === "symbolMaster") {
+        allArtboards.push(layer);
+      }
+    });
+    return allArtboards;
+  }
+
   symbolMasters(): SketchType.SymbolMaster[] {
     const allSymbolMasters: SketchType.SymbolMaster[] = [];
     const layers = this.data.layers;
