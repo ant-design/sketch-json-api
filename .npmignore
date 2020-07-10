@@ -1,0 +1,6 @@
+demo
+dist/demo
+src
+temp
+jest.config.jest
+tsconfig.json
