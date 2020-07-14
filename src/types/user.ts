@@ -1,5 +1,5 @@
 import FileFormat from "@sketch-hq/sketch-file-format-ts";
-import { PageId, CoordString } from "./utils";
+import { CoordString, Uuid } from "./utils";
 
 export interface UserJSON {
   document: UserJSON_Document;
@@ -16,7 +16,7 @@ export interface UserJSON_Document {
 }
 
 export interface UserJSON_PageConfig {
-  pageId: PageId;
+  pageId: Uuid;
   scrollOrigin: CoordString;
   zoomValue?: number;
 }

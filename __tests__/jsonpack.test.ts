@@ -1,9 +1,9 @@
 import { JSONPack } from "../src";
 
-test("JSONPack", () => {
+test("JSONPack", async () => {
   const samplePackPath = "demo/files/SomeArtboards";
 
-  const pack = JSONPack.fromPath(samplePackPath);
+  const pack = await JSONPack.fromPath(samplePackPath);
 
   const artboards = pack.getAllArtboards();
 

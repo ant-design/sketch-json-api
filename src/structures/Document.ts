@@ -1,20 +1,53 @@
 import * as fs from "fs";
+import { v4 } from "uuid";
 
 import SketchType from "../types";
-import { INIT_DATA } from "../constants";
 
 export type DocumentConstructorOptions = {
-  do_objectID: SketchType.Uuid;
-  // ...
+  documentId: SketchType.Uuid;
+  data: SketchType.DocumentJSON;
 };
 
 export class Document {
+  documentId: SketchType.Uuid;
   data: SketchType.DocumentJSON;
 
   constructor();
   constructor(options: DocumentConstructorOptions);
   constructor(options?: any) {
-    this.data = INIT_DATA.document;
+    this.documentId = (options && options.documentId) || v4().toUpperCase();
+    this.data = (options && options.data) || {
+      _class: "document",
+      do_objectID: this.documentId,
+      assets: {
+        _class: "assetCollection",
+        colors: [],
+        gradients: [],
+        imageCollection: {
+          _class: "imageCollection",
+          images: {},
+        },
+        images: [],
+      },
+      colorSpace: 0,
+      currentPageIndex: 1,
+      foreignLayerStyles: [],
+      foreignSymbols: [],
+      foreignTextStyles: [],
+      layerStyles: {
+        _class: "sharedStyleContainer",
+        objects: [],
+      },
+      layerSymbols: {
+        _class: "symbolContainer",
+        objects: [],
+      },
+      layerTextStyles: {
+        _class: "sharedTextStyleContainer",
+        objects: [],
+      },
+      pages: [],
+    };
   }
 
   setData(data: SketchType.DocumentJSON) {

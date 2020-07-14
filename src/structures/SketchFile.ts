@@ -39,7 +39,7 @@ export class SketchFile {
         fs.mkdirSync(packPath, { recursive: true });
       }
 
-      exec(`unzip ${this.path} -d ${packPath}`, (error, stdout) => {
+      exec(`unzip -o ${this.path} -d ${packPath}`, (error, stdout) => {
         if (error) {
           console.warn(error);
           reject(error);
