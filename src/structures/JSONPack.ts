@@ -151,7 +151,6 @@ export class JSONPack {
     );
 
     this.pages.forEach((page) => {
-      console.log(page.toSketchJSON());
       writeFileSyncP(
         path.join(packPath, `pages/${page.getPageId()}.json`),
         JSON.stringify(page.toSketchJSON())
