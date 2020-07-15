@@ -49,11 +49,33 @@ export class JSONPack {
   constructor();
   constructor(options: JSONPackConstructorOptions);
   constructor(options?: any) {
-    this.user = (options && options.user) || new User();
-    this.meta = (options && options.meta) || new Meta();
-    this.document = (options && options.document) || new Document();
-    this.pages = (options && options.pages) || [new Page()];
     this.path = (options && options.path) || null;
+    this.user = (options && options.user) || new User();
+
+    // at least one page
+    let atLeastOnePage;
+    if (options && options.pages && options.pages.length) {
+      this.pages = options.pages;
+    } else {
+      atLeastOnePage = new Page();
+      this.pages = [atLeastOnePage];
+    }
+
+    if (options && options.meta) {
+      this.meta = options.meta;
+    } else {
+      this.meta = atLeastOnePage
+        ? new Meta(undefined, [atLeastOnePage])
+        : new Meta();
+    }
+
+    if (options && options.document) {
+      this.document = options.document;
+    } else {
+      this.document = atLeastOnePage
+        ? new Document(undefined, [atLeastOnePage])
+        : new Document();
+    }
   }
 
   static fromPathSync(packPath: string): JSONPack {

@@ -1,62 +1,94 @@
 import * as fs from "fs";
 
 import SketchType from "../types";
-import { INIT_DATA } from "../constants";
 import { makeid } from "../utils";
-
-export type PageRecord = {
-  name: string;
-  artboards: {
-    [key: string]: {
-      name: string;
-    };
-  };
-};
-
-export type MetaConstructorOptions = {
-  metaId: SketchType.Uuid;
-  data: SketchType.MetaJSON;
-};
+import { Page } from "./Page";
+import { PagesAndArtboards } from "./models/PagesAndArtboards";
 
 export class Meta {
-  metaCommit: SketchType.Uuid;
-  data: SketchType.MetaJSON;
+  commit: string;
+  pagesAndArtboards: SketchType.PagesAndArtboards;
+  version: SketchType.Version;
+  fonts: string[];
+  compatibilityVersion: 99;
+  app: SketchType.BundleId;
+  autosaved: SketchType.NumericalBool;
+  variant: SketchType.SketchVariant;
+  created: {
+    commit: string;
+    appVersion: string;
+    build: number;
+    app: SketchType.BundleId;
+    compatibilityVersion: number;
+    version: number;
+    variant: SketchType.SketchVariant;
+  };
+  saveHistory: string[];
+  appVersion: string;
+  build: number;
 
   constructor();
-  constructor(options: MetaConstructorOptions);
-  constructor(options?: any) {
-    this.metaCommit = (options && options.metaCommit) || makeid(40);
-    this.data = (options && options.data) || {
-      commit: this.metaCommit,
-      pagesAndArtboards: {},
-      version: 130,
-      fonts: [],
-      compatibilityVersion: 99,
-      app: SketchType.FileFormat.default.BundleId.PublicRelease,
-      autosaved: 0,
-      variant: "NONAPPSTORE",
-      created: {
-        commit: this.metaCommit,
-        appVersion: "66.1",
-        build: 97080,
-        app: SketchType.FileFormat.default.BundleId.PublicRelease,
-        compatibilityVersion: 99,
-        version: 130,
-        variant: "NONAPPSTORE",
-      },
-      saveHistory: ["NONAPPSTORE.97080"],
+  constructor(options: SketchType.Meta);
+  constructor(options?: SketchType.Meta, pages?: Page[]);
+  constructor(options?: any, pages?: any) {
+    this.commit = (options && options.commit) || makeid(40);
+
+    if (pages) {
+      this.pagesAndArtboards = PagesAndArtboards.fromPages(
+        pages
+      ).toSketchJSON();
+    } else if (
+      options &&
+      options.pagesAndArtboards &&
+      Object.keys(options.pagesAndArtboards).length
+    ) {
+      this.pagesAndArtboards = options.pagesAndArtboards;
+    } else {
+      const atLeastOnePage = new Page();
+      const initPagesAndArtboards: SketchType.PagesAndArtboards = {};
+      initPagesAndArtboards[atLeastOnePage.getPageId()] = {
+        name: atLeastOnePage.toSketchJSON().name,
+        artboards: {},
+      };
+      this.pagesAndArtboards = initPagesAndArtboards;
+    }
+
+    this.version = (options && options.version) || 130;
+    this.fonts = (options && options.fonts) || [];
+    this.compatibilityVersion = (options && options.compatibilityVersion) || 99;
+    this.app =
+      (options && options.app) ||
+      SketchType.FileFormat.default.BundleId.PublicRelease;
+    this.autosaved = (options && options.autosaved) || 0;
+    this.variant = (options && options.variant) || "NONAPPSTORE";
+    this.created = (options && options.created) || {
+      commit: this.commit,
       appVersion: "66.1",
       build: 97080,
+      app: SketchType.FileFormat.default.BundleId.PublicRelease,
+      compatibilityVersion: 99,
+      version: 130,
+      variant: "NONAPPSTORE",
     };
+    this.saveHistory = (options && options.saveHistory) || [
+      "NONAPPSTORE.97080",
+    ];
+    this.appVersion = (options && options.appVersion) || "66.1";
+    this.build = (options && options.build) || 97080;
   }
 
-  setData(data: SketchType.MetaJSON) {
-    this.data = data;
+  updateProps(options?: SketchType.Meta): void;
+  updateProps(options?: any) {
+    Object.keys(options).forEach((prop) => {
+      if (this.hasOwnProperty(prop)) {
+        this[prop as keyof this] = options[prop];
+      }
+    });
   }
 
-  static fromData(data: SketchType.MetaJSON): Meta {
+  static fromData(options: SketchType.Meta): Meta {
     const meta = new this();
-    meta.setData(data);
+    meta.updateProps(options);
     return meta;
   }
 
@@ -64,17 +96,27 @@ export class Meta {
     const file = fs.readFileSync(path, "utf-8");
     if (file) {
       const meta = new this();
-      meta.setData(JSON.parse(file));
+      meta.updateProps(JSON.parse(file));
       return meta;
     } else {
       throw Error("Invalid data from path.");
     }
   }
 
-  toSketchJSON() {
-    // todo
-    const sketchJSON: SketchType.MetaJSON = this.data;
-
-    return sketchJSON;
+  toSketchJSON(): SketchType.Meta {
+    return {
+      commit: this.commit,
+      pagesAndArtboards: this.pagesAndArtboards,
+      version: this.version,
+      fonts: this.fonts,
+      compatibilityVersion: this.compatibilityVersion,
+      app: this.app,
+      autosaved: this.autosaved,
+      variant: this.variant,
+      created: this.created,
+      saveHistory: this.saveHistory,
+      appVersion: this.appVersion,
+      build: this.build,
+    };
   }
 }

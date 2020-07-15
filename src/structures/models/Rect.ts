@@ -1,13 +1,5 @@
 import SketchType from "../../types";
 
-export interface RectConstrOpts {
-  constrainProportions?: boolean;
-  height?: number;
-  width?: number;
-  x?: number;
-  y?: number;
-}
-
 export class Rect {
   static _class: "rect";
 
@@ -17,7 +9,9 @@ export class Rect {
   x: number;
   y: number;
 
-  constructor(options?: RectConstrOpts) {
+  constructor();
+  constructor(options: SketchType.Rect);
+  constructor(options?: any) {
     this.constrainProportions =
       (options && options.constrainProportions) || false;
     this.height = (options && options.height) || 100;
