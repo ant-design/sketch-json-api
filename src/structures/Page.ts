@@ -6,7 +6,7 @@ import { Rect } from "./models";
 import { INIT_DATA } from "../constants";
 
 export class Page {
-  static _class: "page";
+  static _class: "page" = "page";
 
   do_objectID: SketchType.Uuid;
   booleanOperation: SketchType.BooleanOperation;

@@ -1,7 +1,7 @@
 import SketchType from "../../types";
 
 export class Rect {
-  static _class: "rect";
+  static _class: "rect" = "rect";
 
   constrainProportions: boolean;
   height: number;

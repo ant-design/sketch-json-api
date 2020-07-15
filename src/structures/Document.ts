@@ -5,7 +5,7 @@ import SketchType from "../types";
 import { Page } from "./Page";
 
 export class Document {
-  static _class: "document";
+  static _class: "document" = "document";
 
   do_objectID: SketchType.Uuid;
   pages: SketchType.FileRef[];

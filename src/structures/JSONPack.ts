@@ -151,15 +151,12 @@ export class JSONPack {
     );
 
     this.pages.forEach((page) => {
+      console.log(page.toSketchJSON());
       writeFileSyncP(
         path.join(packPath, `pages/${page.getPageId()}.json`),
         JSON.stringify(page.toSketchJSON())
       );
     });
-
-    if (fs.existsSync(packPath)) {
-      this.setPath(packPath);
-    }
   }
 
   static isValidStructure(packPath: string): boolean {
