@@ -5,7 +5,7 @@ export { labelSymbolMaster };
 export { JSONPack, JSONPackConstructorOptions } from "./structures/JSONPack";
 export { SketchFile } from "./structures/SketchFile";
 
-export { Meta, MetaConstructorOptions } from "./structures/Meta";
-export { User, UserConstructorOptions } from "./structures/User";
-export { Document, DocumentConstructorOptions } from "./structures/Document";
-export { Page, PageConstructorOptions } from "./structures/Page";
+export { Meta } from "./structures/Meta";
+export { User } from "./structures/User";
+export { Document } from "./structures/Document";
+export { Page } from "./structures/Page";

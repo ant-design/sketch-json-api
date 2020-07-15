@@ -19,7 +19,7 @@ export interface StyleConstrOpts {
 }
 
 export class Style {
-  static _class: "style";
+  static _class: "style" = "style";
 
   do_objectID: Uuid;
 

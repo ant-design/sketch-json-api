@@ -3,32 +3,43 @@ import * as fs from "fs";
 import SketchType from "../types";
 import { CONSTANTS } from "../constants";
 
-export interface UserConstructorOptions {
-  document?: SketchType.UserJSON_Document;
-  pageConfigs?: SketchType.UserJSON_PageConfig[];
-}
-
-type KeyOfPageConfig = keyof SketchType.UserJSON_PageConfig;
-
 export class User {
-  document: SketchType.UserJSON_Document;
-  pageConfigs?: SketchType.UserJSON_PageConfig[];
+  document: SketchType.UserDocumentConfigs;
+
+  otherConfigs?: { key: string; value: SketchType.UserPageConfigs | any }[];
 
   constructor();
-  constructor(options: UserConstructorOptions);
+  constructor(options: SketchType.User);
   constructor(options?: any) {
     this.document = (options && options.document) || {
       pageListCollapsed: CONSTANTS.user.document.pageListCollapsed.default,
       pageListHeight: CONSTANTS.user.document.pageListHeight.default,
     };
 
-    if (options && options.pageConfigs) {
-      this.pageConfigs = options.pageConfigs;
+    if (options) {
+      Object.keys(options).forEach((key) => {
+        if (key !== "document") {
+          if (!this.otherConfigs) this.otherConfigs = [];
+          this.otherConfigs.push({
+            key,
+            value: options[key],
+          });
+        }
+      });
     }
   }
 
-  static fromData(data: UserConstructorOptions) {
-    return new this(data);
+  updateProps(options?: SketchType.User): void;
+  updateProps(options?: any) {
+    Object.keys(options).forEach((prop) => {
+      if (this.hasOwnProperty(prop)) {
+        this[prop as keyof this] = options[prop];
+      }
+    });
+  }
+
+  static fromData(options: SketchType.User): User {
+    return new this(options);
   }
 
   static fromPath(path: string): User {
@@ -41,20 +52,15 @@ export class User {
     }
   }
 
-  toSketchJSON() {
-    const sketchJSON: SketchType.UserJSON = { document: this.document };
-    if (this.pageConfigs) {
-      this.pageConfigs.forEach((pageConfig) => {
-        sketchJSON[pageConfig.pageId] = {};
-        const keys = Object.keys(pageConfig) as KeyOfPageConfig[];
-        keys.forEach((key) => {
-          if (key !== "pageId") {
-            sketchJSON[pageConfig.pageId][key] = pageConfig[key];
-          }
-        });
+  toSketchJSON(): SketchType.User {
+    const json: SketchType.User = { document: this.document };
+
+    if (this.otherConfigs) {
+      this.otherConfigs.forEach(({ key, value }) => {
+        json[key] = value;
       });
     }
 
-    return sketchJSON;
+    return json;
   }
 }

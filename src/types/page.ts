@@ -1,14 +1,28 @@
 import FileFormat from "@sketch-hq/sketch-file-format-ts";
 import { tuple } from "./utils";
+import {
+  Artboard,
+  Group,
+  Oval,
+  Polygon,
+  Rectangle,
+  ShapePath,
+  Star,
+  Triangle,
+  ShapeGroup,
+  Text,
+  SymbolMaster,
+  SymbolInstance,
+  Slice,
+  Hotspot,
+  Bitmap,
+} from "./origin";
 
-export type PageJSON = FileFormat.Page;
+export type Page = FileFormat.Page;
 
-export type Artboard = FileFormat.Artboard;
-export type SymbolMaster = FileFormat.SymbolMaster;
 export type ArtboardLike = Artboard | SymbolMaster;
 
-export type Layer = FileFormat.AnyLayer;
-
+// Layer = AnyLayer - 'Page'
 export const LAYER_CLASS_OPTIONS = tuple(
   "Artboard",
   "Group",
@@ -27,3 +41,19 @@ export const LAYER_CLASS_OPTIONS = tuple(
   "Bitmap"
 );
 export type LayerClass = typeof LAYER_CLASS_OPTIONS[number];
+export type Layer =
+  | Artboard
+  | Group
+  | Oval
+  | Polygon
+  | Rectangle
+  | ShapePath
+  | Star
+  | Triangle
+  | ShapeGroup
+  | Text
+  | SymbolMaster
+  | SymbolInstance
+  | Slice
+  | Hotspot
+  | Bitmap;

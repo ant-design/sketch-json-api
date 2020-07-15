@@ -1,12 +1,7 @@
 import FileFormat from "@sketch-hq/sketch-file-format-ts";
-import { CoordString, Uuid } from "./utils";
+import { CoordString } from "./utils";
 
-export interface UserJSON {
-  document: UserJSON_Document;
-  [key: string]: any;
-}
-
-export interface UserJSON_Document {
+export interface UserDocumentConfigs {
   pageListHeight: number;
   pageListCollapsed: FileFormat.NumericalBool;
   expandedSymbolPathsInSidebar?: [];
@@ -15,8 +10,9 @@ export interface UserJSON_Document {
   componentSidebarTreeStructure?: FileFormat.NumericalBool;
 }
 
-export interface UserJSON_PageConfig {
-  pageId: Uuid;
+export interface UserPageConfigs {
   scrollOrigin: CoordString;
   zoomValue?: number;
 }
+
+export type User = FileFormat.User;
