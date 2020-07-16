@@ -7,6 +7,7 @@
     "demo-techui": "npm run build && rm -rf temp/techui && node dist/demo/label/techui/techui.js",
     "demo-zip": "npm run build && rm -rf temp/zip && node dist/demo/zip/zip.js",
     "demo-unzip": "npm run build && rm -rf temp/unzip &&node dist/demo/unzip/unzip.js",
+    "sync-origin-types": "node dist/scripts/sync-origin-types.js",
     "build": "tsc",
     "test": "jest"
   },
@@ -25,10 +26,12 @@
     "@sketch-hq/sketch-file-format-ts": "^5.1.0",
     "@types/json-schema": "^7.0.4",
     "@types/uuid": "^8.0.0",
+    "fs-extra": "^9.0.1",
     "mkdirp": "^1.0.4",
     "uuid": "^8.1.0"
   },
   "devDependencies": {
+    "@types/fs-extra": "^9.0.1",
     "@types/jest": "^26.0.0",
     "@types/node": "^14.0.12",
     "jest": "^26.0.1",
