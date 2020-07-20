@@ -93,5 +93,5 @@ originSketch
   })
   .then((jsonPack) => {
     const checkPath = "temp/label/check";
-    jsonPack?.write(checkPath);
+    jsonPack?.writeSync(checkPath);
   });

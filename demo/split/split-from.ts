@@ -34,7 +34,7 @@ const newPackPath = path.join(targetPath, "new");
     // make a new Sketch file with that single layer
 
     const newPack = new JSONPack();
-    newPack.write(newPackPath);
+    await newPack.write(newPackPath);
     newPack.zip(path.join(path.dirname(newPackPath), "new.sketch"));
   } catch (error) {
     throw error;

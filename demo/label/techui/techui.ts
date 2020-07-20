@@ -59,6 +59,6 @@ originSketch
       throw new Error("JSON pack is not found.");
     }
     const checkPath = "temp/techui/labeljson";
-    jsonPack.write(checkPath);
+    jsonPack.writeSync(checkPath);
     jsonPack.zip("temp/techui/techui-label.sketch");
   });

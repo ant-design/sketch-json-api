@@ -1,4 +1,6 @@
 import * as fs from "fs";
+import * as fse from "fs-extra";
+import * as fsc from "../utils/fs-custom";
 import * as path from "path";
 import { exec } from "child_process";
 
@@ -6,7 +8,6 @@ import { User } from "./User";
 import { Meta } from "./Meta";
 import { Document } from "./Document";
 import { Page } from "./Page";
-import { writeFileSyncP } from "../utils";
 import SketchType, { JSONPackComponent } from "../types";
 
 const STRUCTURE: Record<
@@ -134,24 +135,65 @@ export class JSONPack {
     this.path = path;
   }
 
-  write(packPath: string) {
+  async write(packPath: string): Promise<void> {
     this.path = packPath;
+    await fsc.resetPath(this.path);
 
-    writeFileSyncP(
+    const userPromise = fsc.writeFile(
       path.join(packPath, "user.json"),
       JSON.stringify(this.user.toSketchJSON())
     );
-    writeFileSyncP(
+    const metaPromise = fsc.writeFile(
       path.join(packPath, "meta.json"),
       JSON.stringify(this.meta.toSketchJSON())
     );
-    writeFileSyncP(
+    const documentPromise = fsc.writeFile(
+      path.join(packPath, "document.json"),
+      JSON.stringify(this.document.toSketchJSON())
+    );
+
+    const pagePromises = this.pages.map((page) => {
+      return fsc.writeFile(
+        path.join(packPath, `pages/${page.getPageId()}.json`),
+        JSON.stringify(page.toSketchJSON())
+      );
+    });
+
+    const allPromises = [
+      userPromise,
+      metaPromise,
+      documentPromise,
+      ...pagePromises,
+    ];
+
+    return new Promise((resolve, reject) => {
+      Promise.all(allPromises)
+        .then(() => {
+          resolve();
+        })
+        .catch((err) => reject(err));
+    });
+  }
+
+  writeSync(packPath: string) {
+    this.path = packPath;
+    fsc.resetPathSync(this.path);
+
+    fsc.writeFileSync(
+      path.join(packPath, "user.json"),
+      JSON.stringify(this.user.toSketchJSON())
+    );
+    fsc.writeFileSync(
+      path.join(packPath, "meta.json"),
+      JSON.stringify(this.meta.toSketchJSON())
+    );
+    fsc.writeFileSync(
       path.join(packPath, "document.json"),
       JSON.stringify(this.document.toSketchJSON())
     );
 
     this.pages.forEach((page) => {
-      writeFileSyncP(
+      fsc.writeFileSync(
         path.join(packPath, `pages/${page.getPageId()}.json`),
         JSON.stringify(page.toSketchJSON())
       );
@@ -191,7 +233,7 @@ export class JSONPack {
     }
 
     if (!JSONPack.isValidStructure(this.path)) {
-      this.write(this.path);
+      this.writeSync(this.path);
     }
 
     // check again

@@ -18,4 +18,4 @@ export function makeid(length: number): string {
   return result;
 }
 
-export * from "./fs";
+export * from "./fs-custom";
