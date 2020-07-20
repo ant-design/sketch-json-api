@@ -3,6 +3,7 @@ import * as fse from "fs-extra";
 import * as fsc from "../utils/fs-custom";
 import * as path from "path";
 import { exec } from "child_process";
+import { promisify } from "util";
 
 import { User } from "./User";
 import { Meta } from "./Meta";
@@ -225,7 +226,7 @@ export class JSONPack {
     return false;
   }
 
-  zip(sketchPath: string) {
+  zipSync(sketchPath: string) {
     if (!this.path) {
       throw Error(
         "Please firstly write() once or set the path for this JSON pack."
@@ -260,6 +261,37 @@ export class JSONPack {
           console.error(error);
         }
       }
+    );
+  }
+
+  async zip(sketchPath: string): Promise<void> {
+    if (!this.path) {
+      throw Error(
+        "Please firstly write() once or set the path for this JSON pack."
+      );
+    }
+
+    if (!JSONPack.isValidStructure(this.path)) {
+      await this.write(this.path);
+    }
+
+    // check again
+    if (!JSONPack.isValidStructure(this.path)) {
+      throw Error(`The structure of this JSON pack is invalid! ${sketchPath}`);
+    }
+
+    const exist = await fse.pathExists(path.dirname(sketchPath));
+    if (!exist) {
+      await fse.mkdir(path.dirname(sketchPath));
+    }
+
+    await promisify(exec)(
+      `zip -r -X ${path.join(
+        process.cwd(),
+        path.dirname(sketchPath),
+        path.basename(sketchPath)
+      )} *`,
+      { cwd: this.path }
     );
   }
 

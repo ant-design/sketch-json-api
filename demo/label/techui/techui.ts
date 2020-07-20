@@ -60,5 +60,5 @@ originSketch
     }
     const checkPath = "temp/techui/labeljson";
     jsonPack.writeSync(checkPath);
-    jsonPack.zip("temp/techui/techui-label.sketch");
+    jsonPack.zipSync("temp/techui/techui-label.sketch");
   });

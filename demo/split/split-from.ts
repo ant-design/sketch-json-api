@@ -35,7 +35,7 @@ const newPackPath = path.join(targetPath, "new");
 
     const newPack = new JSONPack();
     await newPack.write(newPackPath);
-    newPack.zip(path.join(path.dirname(newPackPath), "new.sketch"));
+    await newPack.zip(path.join(path.dirname(newPackPath), "new.sketch"));
   } catch (error) {
     throw error;
   }

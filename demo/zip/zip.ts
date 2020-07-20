@@ -4,5 +4,5 @@ const samplePackPath = "demo/files/miniSamplePack";
 
 (async () => {
   const pack = await JSONPack.fromPath(samplePackPath);
-  pack.zip("temp/zip/generated.sketch");
+  pack.zipSync("temp/zip/generated.sketch");
 })();
