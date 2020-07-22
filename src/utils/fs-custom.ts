@@ -44,7 +44,7 @@ export async function resetPath(path: string) {
     if (isPathLikeDir(path)) {
       await fse.ensureDir(path);
     } else {
-      await fse.ensureFile(path);
+      await fse.ensureDir(pat.dirname(path));
     }
   } catch (error) {
     console.log(error);
@@ -63,7 +63,7 @@ export function resetPathSync(path: string) {
   if (isPathLikeDir(path)) {
     fse.ensureDirSync(path);
   } else {
-    fse.ensureFileSync(path);
+    fse.ensureDirSync(pat.dirname(path));
   }
 }
 

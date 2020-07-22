@@ -1,6 +1,5 @@
 import * as path from "path";
-import { SketchFile, JSONPack, Page } from "../../src";
-import { Layer } from "../../src/types";
+import { SketchType, SketchFile, JSONPack, Page, Layer } from "../../src";
 
 const sampleSketchPath = "demo/files/1Symbol1Artboard.sketch";
 const targetPath = "temp/split/split-from";
@@ -24,7 +23,7 @@ const newPackPath = path.join(targetPath, "new");
     }
 
     const layers = somePage.getLayers({ classes: ["Artboard"] });
-    let someLayer: Layer;
+    let someLayer: SketchType.Layer;
     if (layers && layers.length) {
       someLayer = layers[0];
     } else {
@@ -33,7 +32,10 @@ const newPackPath = path.join(targetPath, "new");
 
     // make a new Sketch file with that single layer
 
-    const newPack = new JSONPack();
+    const newLayer = new Layer({ class: "Artboard", data: someLayer });
+    const newPage = new Page({ layers: [newLayer.toSketchJSON()] } as any);
+    const newPack = new JSONPack({ pages: [newPage] } as any);
+
     await newPack.write(newPackPath);
     await newPack.zip(path.join(path.dirname(newPackPath), "new.sketch"));
   } catch (error) {

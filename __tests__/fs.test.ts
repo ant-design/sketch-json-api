@@ -1,9 +1,9 @@
 import * as fse from "fs-extra";
 import * as path from "path";
 
-import * as fsc from "../src/utils/fs";
+import * as fsc from "../src/utils/fs-custom";
 
-test("fs", async () => {
+test("fsc", async () => {
   const samplePath = "temp/tests/some-dir-path";
   await fsc.resetPath(samplePath);
   const filePath1 = path.join(samplePath, "test1.txt");

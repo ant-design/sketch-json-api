@@ -66,17 +66,13 @@ export class JSONPack {
     if (options && options.meta) {
       this.meta = options.meta;
     } else {
-      this.meta = atLeastOnePage
-        ? new Meta(undefined, [atLeastOnePage])
-        : new Meta();
+      this.meta = new Meta(undefined, this.pages);
     }
 
     if (options && options.document) {
       this.document = options.document;
     } else {
-      this.document = atLeastOnePage
-        ? new Document(undefined, [atLeastOnePage])
-        : new Document();
+      this.document = new Document(undefined, this.pages);
     }
   }
 
