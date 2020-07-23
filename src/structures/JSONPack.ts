@@ -243,11 +243,7 @@ export class JSONPack {
     }
 
     exec(
-      `zip -r -X ${path.join(
-        process.cwd(),
-        path.dirname(sketchPath),
-        path.basename(sketchPath)
-      )} *`,
+      `zip -r -X ${path.resolve(process.cwd(), sketchPath)} *`,
       { cwd: this.path },
       (err, error) => {
         if (err) {
@@ -282,11 +278,7 @@ export class JSONPack {
     }
 
     await promisify(exec)(
-      `zip -r -X ${path.join(
-        process.cwd(),
-        path.dirname(sketchPath),
-        path.basename(sketchPath)
-      )} *`,
+      `zip -r -X ${path.resolve(process.cwd(), sketchPath)} *`,
       { cwd: this.path }
     );
   }
