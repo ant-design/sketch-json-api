@@ -58,37 +58,35 @@ const targetPath = "temp/label/files";
 
 originSketch
   .unzip(targetPath)
-  .then((unzipped) => {
-    if (unzipped) {
-      let jsonPack;
-      if (JSONPack.isValidStructure(targetPath)) {
-        jsonPack = JSONPack.fromPathSync(targetPath);
+  .then(() => {
+    let jsonPack;
+    if (JSONPack.isValidStructure(targetPath)) {
+      jsonPack = JSONPack.fromPathSync(targetPath);
 
-        const pages: Page[] = jsonPack.getPages();
+      const pages: Page[] = jsonPack.getPages();
 
-        pages.forEach((page) => {
-          page.symbolMasters().forEach((symbolMaster, index) => {
-            const labelInfo = ASSET_META.assets.examples.find(
-              (example) => example.identifier === symbolMaster.name
+      pages.forEach((page) => {
+        page.symbolMasters().forEach((symbolMaster, index) => {
+          const labelInfo = ASSET_META.assets.examples.find(
+            (example) => example.identifier === symbolMaster.name
+          );
+
+          if (labelInfo) {
+            const atom = ASSET_META.assets.atoms.find(
+              (atom) => atom.identifier === labelInfo.atomAssetID
             );
 
-            if (labelInfo) {
-              const atom = ASSET_META.assets.atoms.find(
-                (atom) => atom.identifier === labelInfo.atomAssetID
-              );
+            const labelledSymbolMaster = labelSymbolMaster(symbolMaster, {
+              example: labelInfo,
+              atom,
+            });
 
-              const labelledSymbolMaster = labelSymbolMaster(symbolMaster, {
-                example: labelInfo,
-                atom,
-              });
-
-              page.symbolMasters()[index] = labelledSymbolMaster;
-            }
-          });
+            page.symbolMasters()[index] = labelledSymbolMaster;
+          }
         });
+      });
 
-        return jsonPack;
-      }
+      return jsonPack;
     }
   })
   .then((jsonPack) => {

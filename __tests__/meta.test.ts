@@ -2,7 +2,7 @@ import { Meta } from "../src";
 
 test("meta constructor", () => {
   const meta = new Meta();
-  console.log(meta.toSketchJSON());
+  // console.log(meta.toSketchJSON());
 });
 
 test("meta from data", () => {
@@ -31,7 +31,7 @@ test("meta from data", () => {
     build: 97080,
   };
   const meta = Meta.fromData(data);
-  console.log(meta.toSketchJSON());
+  // console.log(meta.toSketchJSON());
 });
 
 test("meta from path", () => {
