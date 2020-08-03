@@ -1,6 +1,8 @@
 import { SketchFile } from "../../src";
 
-const sampleSketchPath = "demo/unzip/minisample.sketch";
+(async () => {
+  const sampleSketchPath = "demo/unzip/minisample.sketch";
 
-const sketch = new SketchFile(sampleSketchPath);
-sketch.unzipSync("temp/unzip");
+  const sketch = new SketchFile(sampleSketchPath);
+  await sketch.unzip("temp/unzip");
+})();

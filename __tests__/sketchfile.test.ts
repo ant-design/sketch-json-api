@@ -1,27 +1,25 @@
 import * as path from "path";
 import { SketchFile, JSONPack } from "../src";
 
-// const testResultsPath = "temp/tests/sketchfile";
+const testResultsPath = "temp/tests/sketchfile";
 
-// const testSketchFilePath = "demo/files/SimpleButton.sketch";
-// const testSketchFile = new SketchFile(testSketchFilePath);
+const testSketchFilePath = "demo/files/SimpleButton.sketch";
+const testSketchFile = new SketchFile(testSketchFilePath);
 
 describe("SketchFile class", () => {
-  it("todo", () => {
-    expect(true).toBe(true);
-  });
+  describe("unzip method works", () => {
+    const unzipTestResultsPath = path.join(testResultsPath, "unzip");
 
-  //   describe("unzip method works for", () => {
-  //     it("sync case", () => {
-  //       const syncDestPath = path.join(testResultsPath, "unzip_sync");
-  //       testSketchFile.unzipSync(syncDestPath);
-  //       expect(JSONPack.isValidStructure(syncDestPath)).toBe(true);
-  //     });
-  //     it("async case", async () => {
-  //       expect.assertions(1);
-  //       const asyncDestPath = path.join(testResultsPath, "unzip_async");
-  //       await testSketchFile.unzip(asyncDestPath);
-  //       expect("a").toBe("a");
-  //     });
-  //   });
+    it("by cli", async () => {
+      const cliDestPath = path.join(unzipTestResultsPath, "by_cli");
+      await testSketchFile.unzip(cliDestPath, { cli: true });
+      expect(JSONPack.isValidStructure(cliDestPath)).toBe(true);
+    });
+
+    it("by node", async () => {
+      const nodeDestPath = path.join(unzipTestResultsPath, "by_node");
+      await testSketchFile.unzip(nodeDestPath);
+      expect(JSONPack.isValidStructure(nodeDestPath)).toBe(true);
+    });
+  });
 });

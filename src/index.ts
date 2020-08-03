@@ -4,8 +4,12 @@ export * as SketchType from "./types";
 
 export { labelSymbolMaster };
 
-export { JSONPack, JSONPackConstructorOptions } from "./structures/JSONPack";
-export { SketchFile } from "./structures/SketchFile";
+export {
+  JSONPack,
+  JSONPackConstructorOptions,
+  ZipOpts,
+} from "./structures/JSONPack";
+export { SketchFile, UnzipOpts } from "./structures/SketchFile";
 
 export { Meta } from "./structures/Meta";
 export { User } from "./structures/User";

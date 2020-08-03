@@ -52,11 +52,11 @@ originSketch
       return jsonPack;
     }
   })
-  .then((jsonPack) => {
+  .then(async (jsonPack) => {
     if (!jsonPack) {
       throw new Error("JSON pack is not found.");
     }
     const checkPath = "temp/techui/labeljson";
     jsonPack.writeSync(checkPath);
-    jsonPack.zipSync("temp/techui/techui-label.sketch");
+    await jsonPack.zip("temp/techui/techui-label.sketch");
   });

@@ -4,6 +4,7 @@ import * as fsc from "../utils/fs-custom";
 import * as path from "path";
 import { exec } from "child_process";
 import { promisify } from "util";
+import { zip } from "compressing";
 
 import { User } from "./User";
 import { Meta } from "./Meta";
@@ -40,6 +41,10 @@ export type JSONPackConstructorOptions = {
   pages: Page[];
   path?: string;
 };
+
+export interface ZipOpts {
+  cli?: boolean;
+}
 
 export class JSONPack {
   user: User;
@@ -222,41 +227,7 @@ export class JSONPack {
     return false;
   }
 
-  zipSync(sketchPath: string) {
-    if (!this.path) {
-      throw Error(
-        "Please firstly write() once or set the path for this JSON pack."
-      );
-    }
-
-    if (!JSONPack.isValidStructure(this.path)) {
-      this.writeSync(this.path);
-    }
-
-    // check again
-    if (!JSONPack.isValidStructure(this.path)) {
-      throw Error(`The structure of this JSON pack is invalid! ${sketchPath}`);
-    }
-
-    if (!fs.existsSync(path.dirname(sketchPath))) {
-      fs.mkdirSync(path.dirname(sketchPath), { recursive: true });
-    }
-
-    exec(
-      `zip -r -X ${path.resolve(process.cwd(), sketchPath)} *`,
-      { cwd: this.path },
-      (err, error) => {
-        if (err) {
-          console.error(err);
-        }
-        if (error) {
-          console.error(error);
-        }
-      }
-    );
-  }
-
-  async zip(sketchPath: string): Promise<void> {
+  async zip(sketchPath: string, options?: ZipOpts): Promise<void> {
     if (!this.path) {
       throw Error(
         "Please firstly write() once or set the path for this JSON pack."
@@ -272,15 +243,16 @@ export class JSONPack {
       throw Error(`The structure of this JSON pack is invalid! ${sketchPath}`);
     }
 
-    const exist = await fse.pathExists(path.dirname(sketchPath));
-    if (!exist) {
-      await fse.mkdir(path.dirname(sketchPath));
-    }
+    fse.ensureDir(path.dirname(sketchPath));
 
-    await promisify(exec)(
-      `zip -r -X ${path.resolve(process.cwd(), sketchPath)} *`,
-      { cwd: this.path }
-    );
+    if (options?.cli) {
+      await promisify(exec)(
+        `zip -r -X ${path.resolve(process.cwd(), sketchPath)} *`,
+        { cwd: this.path }
+      );
+    } else {
+      await zip.compressDir(this.path, sketchPath);
+    }
   }
 
   getAllArtboards(): SketchType.ArtboardLike[] {
