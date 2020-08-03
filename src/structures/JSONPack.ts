@@ -5,12 +5,15 @@ import * as path from "path";
 import { exec } from "child_process";
 import { promisify } from "util";
 import { zip } from "compressing";
+import { pipeline } from "stream";
 
 import { User } from "./User";
 import { Meta } from "./Meta";
 import { Document } from "./Document";
 import { Page } from "./Page";
 import SketchType, { JSONPackComponent } from "../types";
+
+const pipe = promisify(pipeline);
 
 const STRUCTURE: Record<
   JSONPackComponent,
@@ -251,7 +254,14 @@ export class JSONPack {
         { cwd: this.path }
       );
     } else {
-      await zip.compressDir(this.path, sketchPath);
+      const zipStream = new zip.Stream();
+      const files = await fse.readdir(this.path);
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        zipStream.addEntry(path.join(this.path, file));
+      }
+      const destStream = fse.createWriteStream(sketchPath);
+      await pipe(zipStream, destStream);
     }
   }
 
