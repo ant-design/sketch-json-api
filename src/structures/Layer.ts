@@ -4,7 +4,7 @@ import SketchType from "../types";
 
 export interface LayerConstrOpts {
   class: SketchType.LayerClass;
-  data: SketchType.Layer;
+  data: any; // TODO: SketchType.Layer
 }
 
 const INIT_ARTBOARD = {
@@ -103,7 +103,7 @@ const INIT_ARTBOARD = {
 
 export class Layer {
   class: SketchType.LayerClass;
-  data: SketchType.Layer;
+  data: any; // TODO: SketchType.Layer
 
   constructor();
   constructor(options: LayerConstrOpts);
@@ -113,7 +113,7 @@ export class Layer {
       options.class &&
       options.data &&
       (!options.data._class ||
-        options.class.toLowerCase() !== options.data._class)
+        options.class.toLowerCase() !== options.data._class.toLowerCase())
     ) {
       throw new Error(
         `Class (${options.class}) and data (${options.data._class}) can not match!`
