@@ -55,13 +55,14 @@ const sketchFilePath = `${folderFilePath}.sketch`;
 
   await fse.ensureDir(`${folderFilePath}/images/`);
 
-  for (let i = 0; i < filelist.length; i++) {
-    const { name, data } = filelist[i];
-
-    await fse.writeFile(`${folderFilePath}/images/${name}`, data, {
+  const tasklist = filelist.map((f) => {
+    const { name, data } = f;
+    return fse.writeFile(`${folderFilePath}/images/${name}`, data, {
       encoding: "base64",
     });
-  }
+  });
+
+  await Promise.all(tasklist);
 
   // zip the .sketch file
 
