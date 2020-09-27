@@ -1,6 +1,7 @@
 import { v4 } from "uuid";
 
 import SketchType from "../types";
+import { assignDeep } from "../utils";
 
 export interface LayerConstrOpts {
   class: SketchType.LayerClass;
@@ -127,12 +128,16 @@ export class Layer {
   updateProps(options?: any) {
     Object.keys(options).forEach((prop) => {
       if (this.hasOwnProperty(prop)) {
-        this[prop as keyof this] = options[prop];
+        this[prop as keyof this] = assignDeep(
+          {},
+          this[prop as keyof this],
+          options[prop]
+        );
       }
     });
   }
 
   toSketchJSON(): SketchType.Layer {
-    return this.data;
+    return JSON.parse(JSON.stringify(this.data));
   }
 }

@@ -171,4 +171,37 @@ export class Page {
     });
     return filteredLayers;
   }
+
+  reLayoutLayers() {
+    let yMark = 0;
+    const Y_Margin = 20;
+    const Y_MAX = 2000;
+
+    let xMark = 0;
+    const X_Margin = 100;
+    let localMaxWidth = 0;
+
+    this.layers.forEach((layer, i) => {
+      const { height, width } = layer.frame;
+
+      if (width > localMaxWidth) {
+        localMaxWidth = width;
+      }
+
+      let layerTop = yMark + Y_Margin;
+      let layerBottom = layerTop + height;
+
+      if (layerBottom > Y_MAX) {
+        layerTop = 0;
+        layerBottom = height;
+        xMark += localMaxWidth + X_Margin;
+        localMaxWidth = width;
+      }
+
+      this.layers[i].frame.y = layerTop;
+      yMark = layerBottom;
+
+      this.layers[i].frame.x = xMark;
+    });
+  }
 }
