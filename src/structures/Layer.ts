@@ -4,8 +4,8 @@ import SketchType from "../types";
 import { assignDeep } from "../utils";
 
 export interface LayerConstrOpts {
-  class: SketchType.LayerClass;
-  data: any; // TODO: SketchType.Layer
+  class?: SketchType.LayerClass;
+  data?: any; // TODO: SketchType.Layer
 }
 
 const INIT_ARTBOARD = {
@@ -124,7 +124,7 @@ export class Layer {
     this.data = (options && options.data) || INIT_ARTBOARD;
   }
 
-  updateProps(options?: SketchType.Layer): void;
+  updateProps(options?: LayerConstrOpts): void;
   updateProps(options?: any) {
     Object.keys(options).forEach((prop) => {
       if (this.hasOwnProperty(prop)) {
