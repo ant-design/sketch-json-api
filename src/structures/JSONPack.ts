@@ -197,6 +197,10 @@ export class JSONPack {
     return this.pages;
   }
 
+  getImages() {
+    return this.images;
+  }
+
   setPath(path: string) {
     this.path = path;
   }
