@@ -13,28 +13,45 @@ import { Document } from "./Document";
 import { Page } from "./Page";
 import SketchType, { JSONPackComponent } from "../types";
 
+import { bitmap2base64Sync } from "../utils/image";
+
 const pipe = promisify(pipeline);
 
 const STRUCTURE: Record<
   JSONPackComponent,
-  { fileOrDir: "file" | "dir"; path: string }
+  { fileOrDir: "file" | "dir"; path: string; required: boolean }
 > = {
   user: {
     fileOrDir: "file",
     path: "user.json",
+    required: true,
   },
   meta: {
     fileOrDir: "file",
     path: "meta.json",
+    required: true,
   },
   document: {
     fileOrDir: "file",
     path: "document.json",
+    required: true,
   },
   pages: {
     fileOrDir: "dir",
     path: "pages",
+    required: true,
   },
+  images: {
+    fileOrDir: "dir",
+    path: "images",
+    required: false,
+  },
+};
+
+export type Image = {
+  fileName: string;
+  path?: string;
+  base64: string;
 };
 
 export type JSONPackConstructorOptions = {
@@ -42,6 +59,7 @@ export type JSONPackConstructorOptions = {
   meta: Meta;
   document: Document;
   pages: Page[];
+  images?: Image[];
   path?: string;
 };
 
@@ -54,6 +72,7 @@ export class JSONPack {
   meta: Meta;
   document: Document;
   pages: Page[];
+  images?: Image[];
   path?: string;
 
   constructor();
@@ -82,6 +101,10 @@ export class JSONPack {
     } else {
       this.document = new Document(undefined, this.pages);
     }
+
+    if (options?.images) {
+      this.images = options.images;
+    }
   }
 
   static fromPathSync(packPath: string): JSONPack {
@@ -96,13 +119,32 @@ export class JSONPack {
       .readdirSync(path.join(packPath, "pages"))
       .map((pagePath) => Page.fromPath(path.join(packPath, "pages", pagePath)));
 
-    return new this({
+    const args: JSONPackConstructorOptions = {
       user,
       meta,
       document,
       pages,
       path: packPath,
-    });
+    };
+
+    // maybe images
+    if (fs.existsSync(path.join(packPath, "images"))) {
+      const imageFileNames = fs.readdirSync(path.join(packPath, "images"));
+      if (imageFileNames?.length) {
+        const base64Images: Image[] = imageFileNames.map((fileName) => {
+          const pat = path.join(packPath, "images", fileName);
+          const base64Str = bitmap2base64Sync(pat);
+          return {
+            fileName,
+            base64: base64Str,
+          };
+        });
+
+        args.images = base64Images;
+      }
+    }
+
+    return new this(args);
   }
 
   static fromPath(packPath: string): Promise<JSONPack> {
@@ -120,13 +162,32 @@ export class JSONPack {
           Page.fromPath(path.join(packPath, "pages", pagePath))
         );
 
-      const pack = new this({
+      const args: JSONPackConstructorOptions = {
         user,
         meta,
         document,
         pages,
         path: packPath,
-      });
+      };
+
+      // maybe images
+      if (fs.existsSync(path.join(packPath, "images"))) {
+        const imageFileNames = fs.readdirSync(path.join(packPath, "images"));
+        if (imageFileNames?.length) {
+          const base64Images: Image[] = imageFileNames.map((fileName) => {
+            const pat = path.join(packPath, "images", fileName);
+            const base64Str = bitmap2base64Sync(pat);
+            return {
+              fileName,
+              base64: base64Str,
+            };
+          });
+
+          args.images = base64Images;
+        }
+      }
+
+      const pack = new this(args);
 
       resolve(pack);
     });
@@ -171,6 +232,15 @@ export class JSONPack {
       ...pagePromises,
     ];
 
+    if (this.images) {
+      const imagesPromises = this.images.map((image) => {
+        image.path = path.join(packPath, "images", image.fileName);
+        return fsc.writeFile(image.path, image.base64, { encoding: "base64" });
+      });
+
+      allPromises.push(...imagesPromises);
+    }
+
     return new Promise((resolve, reject) => {
       Promise.all(allPromises)
         .then(() => {
@@ -203,6 +273,13 @@ export class JSONPack {
         JSON.stringify(page.toSketchJSON())
       );
     });
+
+    if (this.images) {
+      this.images.forEach((image) => {
+        image.path = path.join(packPath, "images", image.fileName);
+        fsc.writeFileSync(image.path, image.base64, { encoding: "base64" });
+      });
+    }
   }
 
   static isValidStructure(packPath: string): boolean {
@@ -211,15 +288,17 @@ export class JSONPack {
       keys.forEach((key) => {
         const value = STRUCTURE[key];
         const componentPath = path.join(packPath, value.path);
-        if (value.fileOrDir === "file" && !fs.existsSync(componentPath)) {
-          return false;
-        }
-        if (value.fileOrDir === "dir") {
-          if (
-            !fs.existsSync(componentPath) ||
-            !fs.readdirSync(componentPath)?.length
-          ) {
+        if (value.required) {
+          if (value.fileOrDir === "file" && !fs.existsSync(componentPath)) {
             return false;
+          }
+          if (value.fileOrDir === "dir") {
+            if (
+              !fs.existsSync(componentPath) ||
+              !fs.readdirSync(componentPath)?.length
+            ) {
+              return false;
+            }
           }
         }
       });

@@ -7,7 +7,12 @@ export * from "./meta";
 export * from "./document";
 export * from "./page";
 
-export type JSONPackComponent = "user" | "meta" | "document" | "pages";
+export type JSONPackComponent =
+  | "user"
+  | "meta"
+  | "document"
+  | "pages"
+  | "images";
 
 import * as SketchType from ".";
 export default SketchType;
