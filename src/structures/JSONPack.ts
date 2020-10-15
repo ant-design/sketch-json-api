@@ -13,7 +13,7 @@ import { Document } from "./Document";
 import { Page } from "./Page";
 import SketchType, { JSONPackComponent } from "../types";
 
-import { bitmap2base64Sync } from "../utils/image";
+import { bitmap2base64Sync, findAllBitmapInSketchJSON } from "../utils/image";
 
 const pipe = promisify(pipeline);
 
@@ -355,6 +355,38 @@ export class JSONPack {
         allArtboards.push(artboard);
       });
     });
+    return allArtboards;
+  }
+
+  async getAllArtboardsWithBitmapInfo(): Promise<SketchType.ArtboardLike[]> {
+    if (!this.path) {
+      throw Error(
+        "Please firstly write() once or set the path for this JSON pack."
+      );
+    }
+
+    const allArtboards: SketchType.ArtboardLike[] = [];
+
+    for (let i = 0; i < this.pages.length; i++) {
+      const page = this.pages[i];
+
+      const artboards = page.artboards();
+
+      for (let j = 0; j < artboards.length; j++) {
+        const artboard = artboards[j];
+
+        const infos = await findAllBitmapInSketchJSON(
+          artboard,
+          this.path as string
+        );
+        if (!artboard.userInfo) {
+          artboard.userInfo = {};
+        }
+        artboard.userInfo["bitmapInfos"] = infos;
+
+        allArtboards.push(artboard);
+      }
+    }
     return allArtboards;
   }
 }

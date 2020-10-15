@@ -12,6 +12,9 @@ const DEMO_PATH = "temp/zip/rezip-with-bitmap";
 
   const newPack = await JSONPack.fromPath(originFilePath);
 
+  const infotest = await newPack.getAllArtboardsWithBitmapInfo();
+  console.log(infotest[0].userInfo?.bitmapInfos);
+
   await newPack.write(`${DEMO_PATH}/files`);
   await newPack.zip(`${DEMO_PATH}/result.sketch`);
 })();
