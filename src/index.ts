@@ -1,8 +1,6 @@
-import { labelSymbolMaster } from "./utils";
-
 export * as SketchType from "./types";
 
-export { labelSymbolMaster };
+export { labelSymbolMaster, markLayer } from "./utils";
 
 export {
   JSONPack,
