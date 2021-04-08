@@ -1,6 +1,6 @@
 {
   "name": "sketch-json-api",
-  "version": "0.1.0-alpha.25",
+  "version": "0.1.0-alpha.26",
   "description": "",
   "main": "dist/src/index.js",
   "scripts": {
@@ -9,7 +9,8 @@
     "demo-unzip": "npm run build && rm -rf temp/unzip &&node dist/demo/unzip/unzip.js",
     "sync-origin-types": "node dist/scripts/sync-origin-types.js",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "prepublish": "npm run build && npm run test"
   },
   "repository": {
     "type": "git",
